@@ -1,0 +1,46 @@
+<template>
+    <div style="padding: 0.5rem;background-color:white">
+        <!--Map-->
+        <div style="margin-bottom: 0.8rem;">
+            <div if:true={ShowMap}>
+                <lightning-map options={mapOptions} zoom-level="14" map-markers={MapMarkers} markers-title="Account" onmarkerselect={handleMarkerSelect} selected-marker-value={selectedMarkerValue}></lightning-map>
+            </div>
+            <div if:false={ShowMap}>
+                <lightning-badge label="Fetching Map..." icon-name="utility:checkin"></lightning-badge>
+            </div>
+        </div>
+        <!--News-->
+        <div if:true={ShowMap}>
+            <div>
+                <div style="display: grid;place-items:center;margin-bottom:0.3rem">
+                    <div if:true={ShowNewsBtn}>
+                        <lightning-button icon-name="utility:news" label="Get Account News" onclick={GetNewsByQuery} variant="brand-outline"></lightning-button>
+                    </div>
+                    <div if:false={ShowNewsBtn}>
+                        <lightning-button icon-name="utility:hide" label="Hide News" onclick={HideNewsBtn} variant="brand"></lightning-button>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <p if:true={ShowNews} style="margin-bottom:0.2rem;margin-top:0.2rem;color:red"><b>{msg}</b></p>
+                </div>
+            </div>
+
+            <!--News Content-->
+            <div if:true={ShowNews}>
+                <template for:each={articles} for:item="i">
+                    <div class="slds-p-around_medium lgc-bg" key={i.Id}>
+                        <lightning-tile  type="media">
+                            <p style="margin-bottom:0.3rem"><b><a href={i.url} target="_blank">{i.title}</a></b></p>
+                            <img slot="media" style="height:100px;width:100px;border-radius:8px" src={i.urlToImage}></img>
+                            <ul>
+                                <li style="margin-bottom: 0.2rem;"><i><b>{i.source.name}</b>, <lightning-formatted-date-time value={i.publishedAt}></lightning-formatted-date-time></i></li>
+                                <li class="slds-item">{i.description}</li>
+                            </ul>
+                        </lightning-tile>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</template>
